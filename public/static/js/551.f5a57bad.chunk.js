@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkbmg_web_app=self.webpackChunkbmg_web_app||[]).push([[551],{3551:function(e,t,n){n.r(t),n.d(t,{default:function(){return i}});var u=n(2791),r=n(6871),a=n(7063),s=n(2567),c=n(184),i=function(){var e=(0,r.s0)();return(0,u.useEffect)((function(){var t=setTimeout((function(){e("/",{replace:!0})}),3e3);return function(){clearTimeout(t)}}),[e]),(0,c.jsx)(s.M5,{className:"container",children:(0,c.jsx)(a.ZP,{status:"403",title:"403",subTitle:"Sorry, you are not authorized to access this page."})})}}}]);
+//# sourceMappingURL=551.f5a57bad.chunk.js.map

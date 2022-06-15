@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkbmg_web_app=self.webpackChunkbmg_web_app||[]).push([[649],{649:function(e,u,t){t.r(u);var n=t(2791),a=t(6871),c=t(2567),r=t(184);u.default=function(){var e=(0,a.s0)();return(0,n.useEffect)((function(){var u=setTimeout((function(){e("/auth",{replace:!0})}),1e3);return function(){clearTimeout(u)}}),[e]),(0,r.jsx)(c.zj,{})}}}]);
+//# sourceMappingURL=649.fc20c18a.chunk.js.map

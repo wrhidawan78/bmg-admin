@@ -12,6 +12,7 @@ return [
         // here you can specify some validation rules for your sign-in request
         'validation_rules' => [
             'email' => 'required|email',
+            'employee_id' => 'required|employee_id',
             'password',
             'uniq_id'
         ]

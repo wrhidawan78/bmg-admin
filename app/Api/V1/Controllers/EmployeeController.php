@@ -375,7 +375,7 @@ class EmployeeController extends Controller
 
             array_push($response, $tmp);
         }
-        SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), $this->header, $request->all(), $this->user_id, $this->address, $this->city, $this->province);
+        SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), '', $request->all(), 1, '', '', '');
 
 
         return SiteHelper::convertJson($response);

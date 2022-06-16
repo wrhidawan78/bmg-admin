@@ -90,7 +90,7 @@
                         <div class="card-header">
                         <div class="card-body">
                         <div class="card-body table-responsive p-0">
-                            <h1> PT. BACH MULTI GLOBAL </h2>
+                            <h1> PT. ADYAWINSA TELECOMMUNICATION & ELECTRICAL </h2>
     </section>
 <!-- DataTables -->
 <script src="{{url('AdminLTE/plugins/datatables/jquery.dataTables.js') }}"></script>

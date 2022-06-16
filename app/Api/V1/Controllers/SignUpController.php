@@ -18,24 +18,36 @@ class SignUpController extends Controller
 {
     public function signUp(SignUpRequest $request, JWTAuth $JWTAuth)
     {
-        $user = new User($request->all());
-        if (!$user->save()) {
-            throw new HttpException(500);
+        $if_emp_exist = DB::table('employment')->where('refference_no', $request->employe_id)->first();
+
+        if(empty($if_emp_exist)){
+            throw new NikHttpException();
+        }else{
+            $if_user_exist = DB::table('users')->where('employe_id', $request->employe_id)->first();
+
+            if(empty($if_user_exist)){
+                $user = new User($request->all());
+                if (!$user->save()) {
+                    throw new HttpException(500);
+                }
+
+                if (!Config::get('boilerplate.sign_up.release_token')) {
+                    $users = User::where('email',$request->email)->first();
+
+                    return response()->json([
+                        'status' => 'ok',
+                        'data' =>  $users
+                    ], 201);
+                }
+
+                $token = $JWTAuth->fromUser($user);
+                return response()->json([
+                    'status' => 'ok',
+                    'token' => $token
+                ], 201);
+            }else{
+                throw new CheckUserHttpException();
+            }
         }
-
-        if (!Config::get('boilerplate.sign_up.release_token')) {
-            $users = User::where('email',$request->email)->first();
-
-            return response()->json([
-                'status' => 'ok',
-                'data' =>  $users
-            ], 201);
-        }
-
-        $token = $JWTAuth->fromUser($user);
-        return response()->json([
-            'status' => 'ok',
-            'token' => $token
-        ], 201);
     }
 }

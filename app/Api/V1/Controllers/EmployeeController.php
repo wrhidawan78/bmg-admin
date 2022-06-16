@@ -29,7 +29,7 @@ class EmployeeController extends Controller
         $this->address = (empty($request->address) ? '' : $request->address);
         $this->city = (empty($request->city) ? '' : $request->city);
         $this->province = (empty($request->province) ? '' : $request->province);
-        
+
         $this->header = 'EmployeeController';
 
         $this->myPage = $request->page;
@@ -439,7 +439,7 @@ class EmployeeController extends Controller
     public static function upload_employee(Request $request)
     {
 
-        $user_id = $this->user_id;
+        $user_id = Auth::guard()->user()->id;
         $file = $request->file('uploaded_file');
         if ($file) {
             $filename = $file->getClientOriginalName();

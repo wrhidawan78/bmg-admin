@@ -32,7 +32,6 @@ $api->version('v1', function (Router $api) {
             $api->get('/export', 'App\\Api\\V1\\Controllers\\AttendanceController@export_attendance');
             $api->post('/create/logs', 'App\\Api\\V1\\Controllers\\AttendanceController@create_logs');
             $api->get('/view/logs', 'App\\Api\\V1\\Controllers\\AttendanceController@view_logs');
-
         });
 
         $api->group(['prefix' => 'users'], function (Router $api) {
@@ -71,13 +70,12 @@ $api->version('v1', function (Router $api) {
             $api->post('/create', 'App\\Api\\V1\\Controllers\\SiteController@create');
             $api->post('/edit', 'App\\Api\\V1\\Controllers\\SiteController@edit');
             $api->get('/check_distance', 'App\\Api\\V1\\Controllers\\SiteController@check_distance');
+            $api->get('/check_current_distance', 'App\\Api\\V1\\Controllers\\SiteController@check_current_distance');
             $api->post('/upload/site', 'App\\Api\\V1\\Controllers\\SiteController@upload_site');
             $api->post('/radius', 'App\\Api\\V1\\Controllers\\SiteController@create_radius');
             $api->get('/current_radius', 'App\\Api\\V1\\Controllers\\SiteController@current_radius');
             $api->get('/list_radius', 'App\\Api\\V1\\Controllers\\SiteController@list_radius');
             $api->put('/update_current_radius', 'App\\Api\\V1\\Controllers\\SiteController@update_radius');
-
-
         });
         $api->group(['prefix' => 'reimburstment'], function (Router $api) {
             $api->get('/', 'App\\Api\\V1\\Controllers\\ReimburstmentController@index');
@@ -86,7 +84,6 @@ $api->version('v1', function (Router $api) {
             $api->post('/create', 'App\\Api\\V1\\Controllers\\ReimburstmentController@add_reimburst');
             $api->put('/update', 'App\\Api\\V1\\Controllers\\ReimburstmentController@update');
             $api->get('/export', 'App\\Api\\V1\\Controllers\\ReimburstmentController@export_reimburst');
-
         });
 
         $api->get('/check_version', 'App\\Api\\V1\\Controllers\\ApiAppVersionController@checkversion');

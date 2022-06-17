@@ -117,7 +117,7 @@ class SiteController extends Controller
                             'status' => 1,
                             'image_attachment' => $file_name,
                             'created_at' => Carbon::now(),
-                            'created_by' => $this->user_id 
+                            'created_by' => $this->user_id
                         ));
 
                     $employe_id = explode(',', $request->employe_id);
@@ -254,9 +254,32 @@ class SiteController extends Controller
         return SiteHelper::convertJson($response);
     }
 
+
+    public function check_current_distance(Request $request)
+    {
+        $response = [];
+        $sql = QuerySite::check_current_distance($request->latitude, $request->longitude);
+        $exec_sql = SiteHelper::exec_query($sql);
+        foreach ($exec_sql as $data) {
+
+            $tmp = [];
+            $tmp['id'] = $data->id;
+            $tmp['name'] = $data->name;
+            $tmp['lat'] = $data->lat;
+            $tmp['long'] = $data->long;
+            $tmp['address'] = $data->address;
+            $tmp['distance'] = $data->distance;
+            array_push($response, $tmp);
+        }
+        SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), $this->header, $request->all(), $this->user_id, $this->address, $this->city, $this->province);
+
+        return SiteHelper::convertJson($response);
+    }
+
     public static function upload_site(Request $request)
     {
-        $user_id = $this->user_id;
+        set_time_limit(0);
+        $user_id =  Auth::guard()->user()->id;
         $file = $request->file('uploaded_file');
         if ($file) {
             $filename = $file->getClientOriginalName();
@@ -342,7 +365,7 @@ class SiteController extends Controller
 
             DB::table('config')
                 ->insert(array(
-                    'param_code' => 'max_radius_km',
+                    'param_code' => 'max_radius_m',
                     'param_title' => $request->title,
                     'param_value' => $request->radius,
                     'message' => $request->remark
@@ -363,9 +386,8 @@ class SiteController extends Controller
     {
         SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), $this->header, $request->all(), $this->user_id, $this->address, $this->city, $this->province);
 
-        $sql = DB::table('config')->where('inactive', 0)->first();
+        $sql = DB::table('config')->where('type', 1)->where('inactive', 0)->first();
         return SiteHelper::convertJson($sql->param_value);
-
     }
 
     public function list_radius(Request $request)
@@ -386,7 +408,6 @@ class SiteController extends Controller
         SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), $this->header, $request->all(), $this->user_id, $this->address, $this->city, $this->province);
 
         return SiteHelper::convertJson($response);
-
     }
 
     public function update_radius(Request $request)
@@ -396,12 +417,12 @@ class SiteController extends Controller
         DB::beginTransaction();
         try {
 
-            DB::table('config')->where('id', '!=', $id)
+            DB::table('config')->where('id', '!=', $id)->where('type', 1)
                 ->update(array(
                     'inactive' => 1
                 ));
 
-            DB::table('config')->where('id', $id)
+            DB::table('config')->where('id', $id)->where('type', 1)
                 ->update(array(
                     'inactive' => 0
                 ));
@@ -416,5 +437,4 @@ class SiteController extends Controller
             DB::rollback();
         }
     }
-
 }

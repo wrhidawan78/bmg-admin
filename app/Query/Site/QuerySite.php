@@ -58,7 +58,23 @@ class QuerySite
     public static function check_distance($lat, $long)
     {
         $get_max_distance = DB::table('config')
-            ->where('param_code', 'max_radius_m')
+            ->where('param_code', 'max_radius_m')->where('type', 0)
+            ->first();
+        $max_distance = $get_max_distance->param_value / 1000;
+        $sql = "SELECT id, name, `long`, `lat`, address, (6371*acos(cos(radians('$lat'))*cos(radians(`lat`)) 
+                        *cos(radians(`long`) - radians('$long'))+sin(radians('$lat'))*sin(radians(`lat`)))) AS distance 
+                    FROM master_site
+                    WHERE status = 1
+                    HAVING distance < $max_distance
+                    ORDER BY distance";
+
+        return $sql;
+    }
+
+    public static function check_current_distance($lat, $long)
+    {
+        $get_max_distance = DB::table('config')
+            ->where('param_code', 'max_radius_m')->where('type', 1)
             ->first();
         $max_distance = $get_max_distance->param_value / 1000;
         $sql = "SELECT id, name, `long`, `lat`, address, (6371*acos(cos(radians('$lat'))*cos(radians(`lat`)) 
@@ -75,9 +91,11 @@ class QuerySite
         $sql = "SELECT * FROM config";
 
         if ($id > 0) {
-            $sql .= " WHERE id = $id";
+            $sql .= " WHERE id = $id AND type = 1";
+        } else {
+            $sql .= " WHERE type = 1";
         }
-        
+
         return $sql;
     }
 }

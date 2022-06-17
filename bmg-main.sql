@@ -1,6 +1,6 @@
 /*
 SQLyog Community v13.1.7 (64 bit)
-MySQL - 8.0.29-0ubuntu0.20.04.3 : Database - bmg-main
+MySQL - 5.7.33 : Database - bmg-main
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 8.0.29-0ubuntu0.20.04.3 : Database - bmg-main
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`bmg-main` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`bmg-main` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `bmg-main`;
 
@@ -21,9 +21,9 @@ USE `bmg-main`;
 DROP TABLE IF EXISTS `app_version`;
 
 CREATE TABLE `app_version` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `app_version` varchar(10) DEFAULT NULL,
-  `inactive` int DEFAULT '0',
+  `inactive` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
@@ -37,10 +37,10 @@ insert  into `app_version`(`id`,`app_version`,`inactive`) values
 DROP TABLE IF EXISTS `area`;
 
 CREATE TABLE `area` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `area` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` int NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -59,10 +59,10 @@ insert  into `area`(`id`,`area`,`name`,`status`,`created_at`,`updated_at`,`delet
 DROP TABLE IF EXISTS `attachment`;
 
 CREATE TABLE `attachment` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `full_path` text,
   `created_at` datetime DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -73,9 +73,9 @@ CREATE TABLE `attachment` (
 DROP TABLE IF EXISTS `attendance`;
 
 CREATE TABLE `attendance` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `site_id` int NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `site_id` int(11) NOT NULL,
   `check_in` datetime DEFAULT NULL,
   `check_out` datetime DEFAULT NULL,
   `check_in_long` varchar(100) DEFAULT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `attendance` (
   `check_out_lat` varchar(100) DEFAULT NULL,
   `remark` text,
   `deleted_at` datetime DEFAULT NULL,
-  `deleted_by` int DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `deleted_by` (`deleted_by`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
@@ -102,14 +102,14 @@ insert  into `attendance`(`id`,`user_id`,`site_id`,`check_in`,`check_out`,`check
 DROP TABLE IF EXISTS `attendance_attachment`;
 
 CREATE TABLE `attendance_attachment` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `attendance_id` int NOT NULL,
-  `type` smallint NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attendance_id` int(11) NOT NULL,
+  `type` smallint(6) NOT NULL DEFAULT '1',
   `full_path` text,
   `created_at` datetime DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `deleted_by` int DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
 
@@ -129,11 +129,11 @@ insert  into `attendance_attachment`(`id`,`attendance_id`,`type`,`full_path`,`cr
 DROP TABLE IF EXISTS `attendance_details`;
 
 CREATE TABLE `attendance_details` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `attendance_id` int NOT NULL,
-  `radius` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lat` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `long` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `attendance_id` int(11) NOT NULL,
+  `radius` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lat` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `long` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -147,191 +147,27 @@ CREATE TABLE `attendance_details` (
 DROP TABLE IF EXISTS `attendance_logs`;
 
 CREATE TABLE `attendance_logs` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `lat` double DEFAULT NULL,
   `long` double DEFAULT NULL,
-  `site_no` int DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `province` varchar(100) DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `site_no` int(11) DEFAULT NULL,
+  `user_id` int(5) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `attendance_logs` */
-
-insert  into `attendance_logs`(`id`,`lat`,`long`,`site_no`,`address`,`city`,`province`,`user_id`,`created_at`) values 
-(1,-6.1605092,106.9197036,16,NULL,NULL,NULL,0,'2022-06-14 16:31:39'),
-(2,-6.1668329,106.9177181,16,NULL,NULL,NULL,0,'2022-06-14 16:34:09'),
-(3,-6.1668329,106.9177181,22,NULL,NULL,NULL,0,'2022-06-14 16:34:14'),
-(4,-6.1668329,106.9177181,16,NULL,NULL,NULL,0,'2022-06-14 16:34:15'),
-(5,-6.1668329,106.9177181,20,NULL,NULL,NULL,0,'2022-06-14 16:34:16'),
-(6,-6.1668328,106.9177157,16,NULL,NULL,NULL,0,'2022-06-14 16:34:40'),
-(7,-6.1668328,106.9177157,22,NULL,NULL,NULL,0,'2022-06-14 16:34:48'),
-(8,-6.1668328,106.9177157,16,NULL,NULL,NULL,0,'2022-06-14 16:34:50'),
-(9,-6.1668328,106.9177157,22,NULL,NULL,NULL,0,'2022-06-14 16:34:52'),
-(10,-6.1668306,106.9177201,22,NULL,NULL,NULL,0,'2022-06-14 16:35:00'),
-(11,-6.1668396,106.9177357,22,NULL,NULL,NULL,0,'2022-06-14 16:35:33'),
-(12,-6.166831,106.917717,22,NULL,NULL,NULL,0,'2022-06-14 16:36:06'),
-(13,-6.1671423,106.917468,22,NULL,NULL,NULL,0,'2022-06-14 16:36:46'),
-(14,-6.1668341,106.9177214,22,NULL,NULL,NULL,0,'2022-06-14 16:37:14'),
-(15,-6.1668341,106.9177214,22,NULL,NULL,NULL,0,'2022-06-14 16:37:17'),
-(16,-6.1668341,106.9177214,22,NULL,NULL,NULL,0,'2022-06-14 16:37:28'),
-(17,-6.1668249,106.9177221,22,NULL,NULL,NULL,0,'2022-06-14 16:37:31'),
-(18,-6.1668146,106.9177243,22,NULL,NULL,NULL,0,'2022-06-14 16:37:41'),
-(19,-6.166828,106.9177139,22,NULL,NULL,NULL,0,'2022-06-14 16:38:23'),
-(20,-6.1668349,106.9177196,22,NULL,NULL,NULL,0,'2022-06-14 16:38:58'),
-(21,-6.1668304,106.9177205,22,NULL,NULL,NULL,0,'2022-06-14 16:39:31'),
-(22,-6.1668331,106.9177158,22,NULL,NULL,NULL,0,'2022-06-14 16:41:31'),
-(23,-6.1668359,106.9177176,22,NULL,NULL,NULL,0,'2022-06-14 16:42:32'),
-(24,-6.1668281,106.9177175,22,NULL,NULL,NULL,0,'2022-06-14 16:43:04'),
-(25,-6.1668291,106.9177133,22,NULL,NULL,NULL,0,'2022-06-14 16:43:37'),
-(26,-6.1666717,106.917789,22,NULL,NULL,NULL,0,'2022-06-14 16:44:00'),
-(27,-6.1668325,106.9177157,22,NULL,NULL,NULL,0,'2022-06-14 16:44:38'),
-(28,-6.1668325,106.9177157,22,NULL,NULL,NULL,0,'2022-06-14 16:44:52'),
-(29,-6.1668106,106.9177768,22,NULL,NULL,NULL,0,'2022-06-14 16:45:04'),
-(30,-6.1668106,106.9177768,22,NULL,NULL,NULL,0,'2022-06-14 16:45:19'),
-(31,-6.1668309,106.9177172,22,NULL,NULL,NULL,0,'2022-06-14 16:45:42'),
-(32,-6.1668309,106.9177172,22,NULL,NULL,NULL,0,'2022-06-14 16:46:10'),
-(33,-6.1668294,106.9177141,22,NULL,NULL,NULL,0,'2022-06-14 16:46:14'),
-(34,-6.1668131,106.9177136,22,NULL,NULL,NULL,0,'2022-06-14 16:46:47'),
-(35,-6.1668347,106.9177169,22,NULL,NULL,NULL,0,'2022-06-14 16:46:50'),
-(36,-6.166834,106.9177209,22,NULL,NULL,NULL,0,'2022-06-14 16:47:11'),
-(37,-6.166834,106.9177209,22,NULL,NULL,NULL,0,'2022-06-14 16:47:28'),
-(38,-6.1668301,106.9177191,22,NULL,NULL,NULL,0,'2022-06-14 16:47:32'),
-(39,-6.1668372,106.9177188,22,NULL,NULL,NULL,0,'2022-06-14 16:48:31'),
-(40,-6.1668284,106.9177156,22,NULL,NULL,NULL,0,'2022-06-14 16:49:03'),
-(41,-6.1668284,106.9177156,22,NULL,NULL,NULL,0,'2022-06-14 16:49:19'),
-(42,-6.1668289,106.9177036,22,NULL,NULL,NULL,0,'2022-06-14 16:49:22'),
-(43,-6.1668344,106.9177258,22,NULL,NULL,NULL,0,'2022-06-14 16:50:00'),
-(44,-6.1668302,106.9177198,22,NULL,NULL,NULL,0,'2022-06-14 16:50:33'),
-(45,-6.1668302,106.9177198,22,NULL,NULL,NULL,0,'2022-06-14 16:50:39'),
-(46,-6.1667772,106.917776,22,NULL,NULL,NULL,0,'2022-06-14 16:51:00'),
-(47,-6.167078,106.9177291,22,NULL,NULL,NULL,0,'2022-06-14 16:51:35'),
-(48,-6.1668393,106.9177236,22,NULL,NULL,NULL,0,'2022-06-14 16:52:03'),
-(49,-6.1668314,106.9177087,22,NULL,NULL,NULL,0,'2022-06-14 16:52:36'),
-(50,-6.1668314,106.9177087,22,NULL,NULL,NULL,0,'2022-06-14 16:52:39'),
-(51,-6.1668314,106.9177087,22,NULL,NULL,NULL,0,'2022-06-14 16:53:07'),
-(52,-6.1668318,106.9177171,22,NULL,NULL,NULL,0,'2022-06-14 16:53:09'),
-(53,-6.1668319,106.9177175,22,NULL,NULL,NULL,0,'2022-06-14 16:53:47'),
-(54,-6.1668342,106.9177213,22,NULL,NULL,NULL,0,'2022-06-14 16:54:28'),
-(55,-6.1668342,106.9177213,22,NULL,NULL,NULL,0,'2022-06-14 16:54:47'),
-(56,-6.1668419,106.9177393,22,NULL,NULL,NULL,0,'2022-06-14 16:54:50'),
-(57,-6.1668321,106.9177166,22,NULL,NULL,NULL,0,'2022-06-14 16:55:28'),
-(58,-6.1669778,106.9177217,22,NULL,NULL,NULL,0,'2022-06-14 16:56:12'),
-(59,-6.1668315,106.9177146,22,NULL,NULL,NULL,0,'2022-06-14 16:56:36'),
-(60,-6.1668377,106.9177233,22,NULL,NULL,NULL,0,'2022-06-14 16:57:09'),
-(61,-6.1668479,106.9177279,22,NULL,NULL,NULL,0,'2022-06-14 16:57:41'),
-(62,-6.1668479,106.9177279,22,NULL,NULL,NULL,0,'2022-06-14 16:58:05'),
-(63,-6.1668325,106.9177149,22,NULL,NULL,NULL,0,'2022-06-14 16:58:09'),
-(64,-6.1668338,106.9177258,22,NULL,NULL,NULL,0,'2022-06-14 16:58:47'),
-(65,-6.1668364,106.9177198,22,NULL,NULL,NULL,0,'2022-06-14 16:59:49'),
-(66,-6.1668306,106.9177206,22,NULL,NULL,NULL,0,'2022-06-14 16:59:52'),
-(67,-6.1668339,106.9177186,22,NULL,NULL,NULL,0,'2022-06-14 17:00:30'),
-(68,-6.1668339,106.9177186,22,NULL,NULL,NULL,0,'2022-06-14 17:00:46'),
-(69,-6.1670058,106.9177343,22,NULL,NULL,NULL,0,'2022-06-14 17:01:09'),
-(70,-6.1668296,106.917714,22,NULL,NULL,NULL,0,'2022-06-14 17:01:38'),
-(71,-6.1668326,106.9177194,22,NULL,NULL,NULL,0,'2022-06-14 17:02:11'),
-(72,-6.1668339,106.9177126,22,NULL,NULL,NULL,0,'2022-06-14 17:02:43'),
-(73,-6.166832,106.9177131,22,NULL,NULL,NULL,0,'2022-06-14 17:03:16'),
-(74,-6.1668289,106.9177136,22,NULL,NULL,NULL,0,'2022-06-14 17:03:49'),
-(75,-6.166833,106.9177103,22,NULL,NULL,NULL,0,'2022-06-14 17:04:22'),
-(76,-6.1668335,106.9177156,22,NULL,NULL,NULL,0,'2022-06-14 17:04:55'),
-(77,-6.1668317,106.9177176,22,NULL,NULL,NULL,0,'2022-06-14 17:05:27'),
-(78,-6.1667398,106.9177133,22,NULL,NULL,NULL,0,'2022-06-14 17:06:05'),
-(79,-6.1668324,106.9177179,22,NULL,NULL,NULL,0,'2022-06-14 17:07:31'),
-(80,-6.1668389,106.9177239,22,NULL,NULL,NULL,0,'2022-06-14 17:08:04'),
-(81,-6.1668316,106.9177174,22,NULL,NULL,NULL,0,'2022-06-14 17:08:37'),
-(82,-6.1668393,106.9177224,22,NULL,NULL,NULL,0,'2022-06-14 17:09:10'),
-(83,-6.166841,106.9177218,22,NULL,NULL,NULL,0,'2022-06-14 17:09:43'),
-(84,-6.1668367,106.9177133,22,NULL,NULL,NULL,0,'2022-06-14 17:10:15'),
-(85,-6.1668128,106.9177226,22,NULL,NULL,NULL,0,'2022-06-14 17:10:53'),
-(86,-6.1668331,106.9177185,22,NULL,NULL,NULL,0,'2022-06-14 17:11:47'),
-(87,-6.1668291,106.9177226,22,NULL,NULL,NULL,0,'2022-06-14 17:12:20'),
-(88,-6.1668293,106.9177219,22,NULL,NULL,NULL,0,'2022-06-14 17:12:53'),
-(89,-6.1668284,106.9177154,22,NULL,NULL,NULL,0,'2022-06-14 17:13:25'),
-(90,-6.1668289,106.9177154,22,NULL,NULL,NULL,0,'2022-06-14 17:13:58'),
-(91,-6.1668378,106.9177231,22,NULL,NULL,NULL,0,'2022-06-14 17:14:31'),
-(92,-6.1668364,106.9177251,22,NULL,NULL,NULL,0,'2022-06-14 17:15:04'),
-(93,-6.1668306,106.9177211,22,NULL,NULL,NULL,0,'2022-06-14 17:15:37'),
-(94,-6.1665405,106.9177335,22,NULL,NULL,NULL,0,'2022-06-14 17:16:10'),
-(95,-6.1668298,106.9177144,22,NULL,NULL,NULL,0,'2022-06-14 17:16:42'),
-(96,-6.1668319,106.9177213,22,NULL,NULL,NULL,0,'2022-06-15 08:58:20'),
-(97,-6.1668545,106.91777,22,NULL,NULL,NULL,0,'2022-06-15 08:58:42'),
-(98,-6.1668545,106.91777,22,NULL,NULL,NULL,0,'2022-06-15 08:59:07'),
-(99,-6.166832,106.9177121,22,NULL,NULL,NULL,0,'2022-06-15 08:59:11'),
-(100,-6.1668453,106.9177303,22,NULL,NULL,NULL,0,'2022-06-15 08:59:49'),
-(101,-6.1668345,106.9177236,22,NULL,NULL,NULL,0,'2022-06-15 09:00:22'),
-(102,-6.1668329,106.9177181,22,NULL,NULL,NULL,0,'2022-06-15 09:00:54'),
-(103,-6.1668329,106.9177181,22,NULL,NULL,NULL,0,'2022-06-15 09:01:00'),
-(104,-6.1668341,106.9177153,22,NULL,NULL,NULL,0,'2022-06-15 09:01:27'),
-(105,-6.1668295,106.9177225,22,NULL,NULL,NULL,0,'2022-06-15 09:02:00'),
-(106,-6.1668391,106.9177166,22,NULL,NULL,NULL,0,'2022-06-15 09:02:33'),
-(107,-6.16683,106.9177196,22,NULL,NULL,NULL,0,'2022-06-15 09:03:05'),
-(108,-6.166832,106.9177091,22,NULL,NULL,NULL,0,'2022-06-15 09:03:55'),
-(109,-6.166832,106.9177091,22,NULL,NULL,NULL,0,'2022-06-15 09:04:24'),
-(110,-6.166833,106.9177201,22,NULL,NULL,NULL,0,'2022-06-15 09:04:28'),
-(111,-6.1668442,106.9177285,22,NULL,NULL,NULL,0,'2022-06-15 09:05:06'),
-(112,-6.1668442,106.9177285,22,NULL,NULL,NULL,0,'2022-06-15 09:05:23'),
-(113,-6.1668327,106.9177215,22,NULL,NULL,NULL,0,'2022-06-15 09:05:27'),
-(114,-6.1668344,106.9177216,22,NULL,NULL,NULL,0,'2022-06-15 09:06:13'),
-(115,-6.1668459,106.9177478,22,NULL,NULL,NULL,0,'2022-06-15 09:06:45'),
-(116,-6.1668526,106.9177394,22,NULL,NULL,NULL,0,'2022-06-15 09:06:58'),
-(117,-6.1668409,106.91772,22,NULL,NULL,NULL,0,'2022-06-15 09:07:31'),
-(118,-6.1668335,106.9177195,22,NULL,NULL,NULL,0,'2022-06-15 09:08:05'),
-(119,-6.166831,106.9177191,22,NULL,NULL,NULL,0,'2022-06-15 09:08:37'),
-(120,-6.1668417,106.9177213,22,NULL,NULL,NULL,0,'2022-06-15 09:09:09'),
-(121,-6.1668316,106.9177086,22,NULL,NULL,NULL,0,'2022-06-15 09:09:42'),
-(122,-6.1668325,106.9177136,22,NULL,NULL,NULL,0,'2022-06-15 09:10:14'),
-(123,-6.166836,106.9177275,22,NULL,NULL,NULL,0,'2022-06-15 09:11:16'),
-(124,-6.1668314,106.917721,22,NULL,NULL,NULL,0,'2022-06-15 09:11:48'),
-(125,-6.1668414,106.9177136,22,NULL,NULL,NULL,0,'2022-06-15 09:12:21'),
-(126,-6.1668403,106.9177227,22,NULL,NULL,NULL,0,'2022-06-15 09:12:54'),
-(127,-6.1666395,106.9178474,22,NULL,NULL,NULL,0,'2022-06-15 09:32:16'),
-(128,-6.1668284,106.9177143,22,NULL,NULL,NULL,0,'2022-06-15 09:32:52'),
-(129,-6.1668272,106.9177154,22,NULL,NULL,NULL,0,'2022-06-15 09:53:18'),
-(130,-6.1668272,106.9177154,22,NULL,NULL,NULL,0,'2022-06-15 09:53:53'),
-(131,-6.1669864,106.9177021,22,NULL,NULL,NULL,0,'2022-06-15 09:53:55'),
-(132,-6.1668098,106.9177266,22,NULL,NULL,NULL,0,'2022-06-15 10:04:57'),
-(133,-6.1668275,106.9177103,22,NULL,NULL,NULL,0,'2022-06-15 10:05:22'),
-(134,-6.1668294,106.9177147,22,NULL,NULL,NULL,0,'2022-06-15 10:05:55'),
-(135,-6.166827,106.9177113,22,NULL,NULL,NULL,0,'2022-06-15 10:06:28'),
-(136,-6.1668377,106.9177365,22,NULL,NULL,NULL,0,'2022-06-15 10:10:11'),
-(137,-6.1668277,106.917714,22,NULL,NULL,NULL,0,'2022-06-15 10:11:52'),
-(138,-6.1668277,106.917714,22,NULL,NULL,NULL,0,'2022-06-15 10:12:09'),
-(139,-6.1668179,106.9177242,22,NULL,NULL,NULL,0,'2022-06-15 10:19:22'),
-(140,-6.1668458,106.9177503,22,NULL,NULL,NULL,0,'2022-06-15 10:20:17'),
-(141,-6.1668281,106.9177141,22,NULL,NULL,NULL,0,'2022-06-15 10:20:50'),
-(142,-6.1668297,106.9177146,22,NULL,NULL,NULL,0,'2022-06-15 10:21:22'),
-(143,-6.1668269,106.9177124,22,NULL,NULL,NULL,0,'2022-06-15 10:21:54'),
-(144,-6.1669756,106.9176401,22,NULL,NULL,NULL,0,'2022-06-15 10:22:29'),
-(145,-6.166826,106.9177137,22,NULL,NULL,NULL,0,'2022-06-15 10:23:00'),
-(146,-6.1668277,106.9177124,22,NULL,NULL,NULL,0,'2022-06-15 10:23:33'),
-(147,-6.1668246,106.9177146,22,NULL,NULL,NULL,0,'2022-06-15 10:24:05'),
-(148,-6.1668265,106.9177115,22,NULL,NULL,NULL,0,'2022-06-15 10:24:38'),
-(149,-6.1668256,106.9177135,22,NULL,NULL,NULL,0,'2022-06-15 10:25:11'),
-(150,-6.1668283,106.9177125,22,NULL,NULL,NULL,0,'2022-06-15 10:25:43'),
-(151,-6.1668306,106.9177141,22,NULL,NULL,NULL,0,'2022-06-15 10:26:17'),
-(152,-6.166826,106.9177154,22,NULL,NULL,NULL,0,'2022-06-15 10:26:49'),
-(153,-6.166826,106.9177154,22,NULL,NULL,NULL,0,'2022-06-15 10:26:58'),
-(154,-6.1668299,106.9177151,22,NULL,NULL,NULL,0,'2022-06-15 10:28:09'),
-(155,-6.1668273,106.9177128,22,NULL,NULL,NULL,0,'2022-06-15 10:28:43'),
-(156,-6.1668271,106.9177101,22,NULL,NULL,NULL,0,'2022-06-15 10:30:03'),
-(157,-6.1668311,106.9177171,22,NULL,NULL,NULL,0,'2022-06-15 10:39:07'),
-(158,-6.1668271,106.9177142,22,NULL,NULL,NULL,0,'2022-06-15 10:39:40'),
-(159,-6.1671865,106.9175912,22,'Jalan Pegangsaan Dua 64, Pegangsaan Dua, Kecamatan Kelapa Gading','Kota Jakarta Utara','Daerah Khusus Ibukota Jakarta',0,'2022-06-15 11:03:42');
 
 /*Table structure for table `clusters` */
 
 DROP TABLE IF EXISTS `clusters`;
 
 CREATE TABLE `clusters` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `area` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `area_id` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` int NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `area_id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -350,26 +186,28 @@ insert  into `clusters`(`id`,`area`,`area_id`,`name`,`status`,`created_at`,`upda
 DROP TABLE IF EXISTS `config`;
 
 CREATE TABLE `config` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `param_code` varchar(255) DEFAULT NULL,
   `param_title` varchar(25) DEFAULT NULL,
   `param_value` varchar(255) DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
-  `inactive` smallint DEFAULT '0',
+  `inactive` smallint(6) DEFAULT '0',
+  `type` smallint(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `config` */
 
-insert  into `config`(`id`,`param_code`,`param_title`,`param_value`,`message`,`inactive`) values 
-(1,'max_radius_m','max_radius_m','2000','maksimum radius',0);
+insert  into `config`(`id`,`param_code`,`param_title`,`param_value`,`message`,`inactive`,`type`) values 
+(1,'max_radius_m','max_radius_m','2000','maksimum radius',0,1),
+(8,'max_radius_m','max_radius_m','200','radius1',1,1);
 
 /*Table structure for table `division` */
 
 DROP TABLE IF EXISTS `division`;
 
 CREATE TABLE `division` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `division_id` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -391,12 +229,12 @@ insert  into `division`(`id`,`division_id`,`name`,`created_at`,`deleted_at`) val
 DROP TABLE IF EXISTS `employment`;
 
 CREATE TABLE `employment` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `birthday_date` date NOT NULL,
   `refference_no` varchar(255) DEFAULT NULL,
-  `division_id` int DEFAULT NULL,
-  `cluster_id` int DEFAULT NULL,
+  `division_id` int(11) DEFAULT NULL,
+  `cluster_id` int(11) DEFAULT NULL,
   `mobile_phone` varchar(255) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `religion` varchar(50) DEFAULT NULL,
@@ -406,7 +244,7 @@ CREATE TABLE `employment` (
   `resign_date` date DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `supervisor_id` int DEFAULT NULL,
+  `supervisor_id` int(11) DEFAULT NULL,
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
@@ -422,19 +260,19 @@ insert  into `employment`(`id`,`name`,`birthday_date`,`refference_no`,`division_
 DROP TABLE IF EXISTS `logs_api`;
 
 CREATE TABLE `logs_api` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `headers` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `headers` text COLLATE utf8mb4_unicode_ci,
+  `body` text COLLATE utf8mb4_unicode_ci,
   `address` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `city` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `province` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `logs_api` */
 
@@ -641,14 +479,15 @@ insert  into `logs_api`(`id`,`ip`,`method`,`url`,`headers`,`body`,`address`,`cit
 (200,'192.168.8.1(user:21)','GET','http://192.168.8.12:7777/api/site','SiteController',', 1, 20','','','','2022-06-15 10:57:59','2022-06-15 10:57:59'),
 (201,'192.168.8.1(user:21)','GET','http://192.168.8.12:7777/api/employee','EmployeeController','','','','','2022-06-15 10:57:59','2022-06-15 10:57:59'),
 (202,'10.42.0.204(user:0)','GET','http://192.168.8.12:7777/api/site/current_radius','SiteController','','','','','2022-06-15 11:03:14','2022-06-15 11:03:14'),
-(203,'10.42.0.204(user:0)','GET','http://192.168.8.12:7777/api/site/check_distance','SiteController','-6.1668283, 106.9177184','','','','2022-06-15 11:03:14','2022-06-15 11:03:14');
+(203,'10.42.0.204(user:0)','GET','http://192.168.8.12:7777/api/site/check_distance','SiteController','-6.1668283, 106.9177184','','','','2022-06-15 11:03:14','2022-06-15 11:03:14'),
+(204,'192.168.8.12(user:0)','GET','http://192.168.8.12:7777/api/site/current_radius','SiteController','','','','','2022-06-17 14:24:15','2022-06-17 14:24:15');
 
 /*Table structure for table `master_site` */
 
 DROP TABLE IF EXISTS `master_site`;
 
 CREATE TABLE `master_site` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `site_id` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `long` varchar(50) DEFAULT NULL,
@@ -658,12 +497,12 @@ CREATE TABLE `master_site` (
   `status` varchar(255) DEFAULT NULL,
   `pic` varchar(200) DEFAULT '',
   `created_at` datetime DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   `approved_at` datetime DEFAULT NULL,
-  `approved_by` int DEFAULT NULL,
+  `approved_by` int(11) DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `deleted_by` int DEFAULT NULL,
-  `image_attachment` int DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
+  `image_attachment` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`),
   KEY `approved_by` (`approved_by`),
@@ -686,11 +525,11 @@ insert  into `master_site`(`id`,`site_id`,`name`,`long`,`lat`,`metadata`,`addres
 DROP TABLE IF EXISTS `master_site_attachment`;
 
 CREATE TABLE `master_site_attachment` (
-  `id` int NOT NULL,
-  `site_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `site_id` int(11) NOT NULL,
   `full_path` text,
   `created_at` datetime DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -701,9 +540,9 @@ CREATE TABLE `master_site_attachment` (
 DROP TABLE IF EXISTS `migrations`;
 
 CREATE TABLE `migrations` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -727,21 +566,21 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 DROP TABLE IF EXISTS `reimburstment`;
 
 CREATE TABLE `reimburstment` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `document_no` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `total` float DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL,
   `reimburstment_date` date DEFAULT NULL,
-  `image_attachment` int DEFAULT NULL,
-  `status` smallint DEFAULT '0',
-  `submited_by` int DEFAULT NULL,
+  `image_attachment` int(11) DEFAULT NULL,
+  `status` smallint(6) DEFAULT '0',
+  `submited_by` int(11) DEFAULT NULL,
   `submited_at` datetime DEFAULT NULL,
-  `approved_by` int DEFAULT NULL,
+  `approved_by` int(11) DEFAULT NULL,
   `approved_at` datetime DEFAULT NULL,
-  `confirm_by` int DEFAULT NULL,
+  `confirm_by` int(11) DEFAULT NULL,
   `confirm_at` datetime DEFAULT NULL,
-  `reject_by` int DEFAULT NULL,
+  `reject_by` int(11) DEFAULT NULL,
   `reject_at` datetime DEFAULT NULL,
   `reject_reason` text,
   `metadata` text,
@@ -749,7 +588,7 @@ CREATE TABLE `reimburstment` (
   `genset_end` varchar(50) DEFAULT '',
   `genset_total` varchar(50) DEFAULT '',
   `no_genset` varchar(50) DEFAULT '',
-  `km_mobil` int DEFAULT '0',
+  `km_mobil` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `document_no` (`document_no`),
   KEY `submited_by` (`submited_by`),
@@ -768,12 +607,12 @@ insert  into `reimburstment`(`id`,`document_no`,`title`,`total`,`note`,`reimburs
 DROP TABLE IF EXISTS `reimburstment_attachment`;
 
 CREATE TABLE `reimburstment_attachment` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `reimburse_no` varchar(255) NOT NULL,
   `full_path` text,
   `remark` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
 
@@ -791,19 +630,19 @@ insert  into `reimburstment_attachment`(`id`,`reimburse_no`,`full_path`,`remark`
 DROP TABLE IF EXISTS `reimburstment_type`;
 
 CREATE TABLE `reimburstment_type` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `header_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `header_id` int(11) DEFAULT NULL,
   `code` varchar(3) DEFAULT NULL,
   `url_title` varchar(20) NOT NULL,
   `name` varchar(100) NOT NULL,
   `remark` text,
-  `status` int NOT NULL,
+  `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `created_by` int NOT NULL,
+  `created_by` int(11) NOT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `updated_by` int DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   `deleted_at` date DEFAULT NULL,
-  `deleted_by` int DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
@@ -819,32 +658,12 @@ insert  into `reimburstment_type`(`id`,`header_id`,`code`,`url_title`,`name`,`re
 (7,4,NULL,'ormas','Ormas','',1,'2021-09-13 20:52:26',-1,NULL,NULL,NULL,NULL),
 (8,5,NULL,'atk','ATK','',1,'2021-09-13 20:53:02',-1,NULL,NULL,NULL,NULL);
 
-/*Table structure for table `religion` */
-
-DROP TABLE IF EXISTS `religion`;
-
-CREATE TABLE `religion` (
-  `id` smallint NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-/*Data for the table `religion` */
-
-insert  into `religion`(`id`,`name`) values 
-(1,'ISLAM'),
-(2,'KRISTEN'),
-(3,'HINDU'),
-(4,'BUDDHA'),
-(5,'KATHOLIK'),
-(6,'KATHOLIK');
-
 /*Table structure for table `role` */
 
 DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE `role` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -863,10 +682,10 @@ insert  into `role`(`id`,`name`,`created_at`,`deleted_at`) values
 DROP TABLE IF EXISTS `site_employees`;
 
 CREATE TABLE `site_employees` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `site_id` int NOT NULL,
-  `employe_id` int NOT NULL,
-  `status` int DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `site_id` int(11) NOT NULL,
+  `employe_id` int(11) NOT NULL,
+  `status` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -892,14 +711,14 @@ insert  into `site_employees`(`id`,`site_id`,`employe_id`,`status`,`created_at`,
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniq_id` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `token` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '1',
-  `role_id` int DEFAULT NULL,
-  `employe_id` int DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `employe_id` varchar(11) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -912,10 +731,9 @@ CREATE TABLE `users` (
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`uniq_id`,`email`,`password`,`token`,`is_active`,`role_id`,`employe_id`,`last_login`,`created_at`,`updated_at`,`deleted_at`) values 
-(9,'0ae717583a742be9','rian@admin.com','$2y$10$JrD79VJ.VhQ.XzsVFTHnNOkkbH3p56ut75QyPNz/rCjx3xPpJ45LG',NULL,1,NULL,123,NULL,'2022-06-13 13:53:55','2022-06-14 11:36:23',NULL),
-(12,'ENGAS123','admin@admin.com','$2y$10$.PbPoGuvdeBxVDZ0hpJgb.aZS7LLo5JVvYli1d7Hr8yc8pRbfHxti',NULL,1,NULL,NULL,NULL,'2022-06-13 16:17:27','2022-06-13 16:17:27',NULL),
-(17,'0ae717583a742be8','yossularko@dev.com','',NULL,1,NULL,48260091,NULL,'2022-06-14 16:03:58','2022-06-15 10:09:53',NULL),
-(21,'','yos@admin.com','$2y$10$BfCiG0oke8mFS5v3/b/1GeZmjCd5oUN9wU4bgyok8DHl/9DMW8lY.',NULL,1,1,3,NULL,'2022-06-15 10:45:55','2022-06-15 10:45:55',NULL);
+(9,'0ae717583a742be9','rian@admin.com','$2y$10$JrD79VJ.VhQ.XzsVFTHnNOkkbH3p56ut75QyPNz/rCjx3xPpJ45LG',NULL,1,NULL,'123',NULL,'2022-06-13 13:53:55','2022-06-14 11:36:23',NULL),
+(17,'0ae717583a742be8','yossularko@dev.com','',NULL,1,NULL,'48260091',NULL,'2022-06-14 16:03:58','2022-06-15 10:09:53',NULL),
+(21,'','yos@admin.com','$2y$10$BfCiG0oke8mFS5v3/b/1GeZmjCd5oUN9wU4bgyok8DHl/9DMW8lY.',NULL,1,1,'3',NULL,'2022-06-15 10:45:55','2022-06-15 10:45:55',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

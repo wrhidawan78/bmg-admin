@@ -520,4 +520,25 @@ class EmployeeController extends Controller
             echo '415 error';
         }
     }
+
+
+    public static function customer_list(Request $request)
+    {
+        $customer = $request->customer;
+        $response = [];
+        $sql = "SELECT project_customer FROM user_detail GROUP BY project_customer";
+
+        if ($customer != '' || !empty($customer)) {
+            $sql .= " AND project_customer LIKE '%$customer%'";
+        }
+        $query = DB::select(DB::raw($sql));
+        foreach ($query as $data) {
+            $tmp = [];
+            $tmp['customer'] = $data->project_customer;
+
+            array_push($response, $tmp);
+        }
+
+        return SiteHelper::convertJson($response);
+    }
 }

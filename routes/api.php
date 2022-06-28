@@ -27,20 +27,27 @@ $api->version('v1', function (Router $api) {
 
         $api->group(['prefix' => 'attendance'], function (Router $api) {
             $api->get('/', 'App\\Api\\V1\\Controllers\\AttendanceController@index');
+            $api->get('/total_now', 'App\\Api\\V1\\Controllers\\AttendanceController@total_now');
             $api->post('/in', 'App\\Api\\V1\\Controllers\\AttendanceController@attendance_in');
             $api->post('/out', 'App\\Api\\V1\\Controllers\\AttendanceController@attendance_out');
             $api->get('/export', 'App\\Api\\V1\\Controllers\\AttendanceController@export_attendance');
             $api->post('/create/logs', 'App\\Api\\V1\\Controllers\\AttendanceController@create_logs');
             $api->get('/view/logs', 'App\\Api\\V1\\Controllers\\AttendanceController@view_logs');
+            $api->delete('/{id}', 'App\\Api\\V1\\Controllers\\AttendanceController@attendance_delete');
+            $api->get('/activity', 'App\\Api\\V1\\Controllers\\AttendanceController@activity_list');
         });
 
         $api->group(['prefix' => 'users'], function (Router $api) {
             $api->get('/', 'App\\Api\\V1\\Controllers\\ProfileController@index');
             $api->get('/profile', 'App\\Api\\V1\\Controllers\\ProfileController@show');
             $api->get('/role', 'App\\Api\\V1\\Controllers\\ProfileController@list_role');
+            $api->get('/list', 'App\\Api\\V1\\Controllers\\ProfileController@user_list');
             $api->put('/edit', 'App\\Api\\V1\\Controllers\\ProfileController@edit');
             $api->put('/update', 'App\\Api\\V1\\Controllers\\ProfileController@update');
             $api->post('/upload', 'App\\Api\\V1\\Controllers\\ProfileController@upload_user');
+            $api->get('/need_active', 'App\\Api\\V1\\Controllers\\ProfileController@user_need_to_activated');
+            $api->put('/activated/{id}', 'App\\Api\\V1\\Controllers\\ProfileController@activated_user');
+
         });
 
         $api->group(['prefix' => 'employee'], function (Router $api) {
@@ -53,6 +60,7 @@ $api->version('v1', function (Router $api) {
             $api->post('/religion/add', 'App\\Api\\V1\\Controllers\\EmployeeController@religion_create');
             $api->get('/religion/list', 'App\\Api\\V1\\Controllers\\EmployeeController@religion_list');
             $api->post('/upload', 'App\\Api\\V1\\Controllers\\EmployeeController@upload_employee');
+            $api->get('/customer/list', 'App\\Api\\V1\\Controllers\\EmployeeController@customer_list');
         });
 
         $api->group(['prefix' => 'area'], function (Router $api) {
@@ -63,6 +71,48 @@ $api->version('v1', function (Router $api) {
             $api->post('/create/cluster', 'App\\Api\\V1\\Controllers\\EmployeeController@add_cluster');
             $api->put('/edit/cluster', 'App\\Api\\V1\\Controllers\\EmployeeController@cluster_edit');
         });
+
+        $api->group(['prefix' => 'admin'], function (Router $api) {
+            $api->get('/customer', 'App\\Api\\V1\\Controllers\\CustomerController@index');
+            $api->get('/customer/{id}', 'App\\Api\\V1\\Controllers\\CustomerController@show');
+            $api->post('/customer', 'App\\Api\\V1\\Controllers\\CustomerController@store');
+            $api->put('/customer', 'App\\Api\\V1\\Controllers\\CustomerController@update');
+            $api->delete('/customer/{id}', 'App\\Api\\V1\\Controllers\\CustomerController@delete');
+
+            $api->get('/division', 'App\\Api\\V1\\Controllers\\DivisionController@index');
+            $api->get('/division/{id}', 'App\\Api\\V1\\Controllers\\DivisionController@show');
+            $api->post('/division', 'App\\Api\\V1\\Controllers\\DivisionController@store');
+            $api->put('/division', 'App\\Api\\V1\\Controllers\\DivisionController@update');
+            $api->delete('/division/{id}', 'App\\Api\\V1\\Controllers\\DivisionController@delete');
+
+            $api->get('/region', 'App\\Api\\V1\\Controllers\\RegionController@index');
+            $api->get('/region/{id}', 'App\\Api\\V1\\Controllers\\RegionController@show');
+            $api->post('/region', 'App\\Api\\V1\\Controllers\\RegionController@store');
+            $api->put('/region', 'App\\Api\\V1\\Controllers\\RegionController@update');
+            $api->delete('/region/{id}', 'App\\Api\\V1\\Controllers\\RegionController@delete');
+
+            $api->get('/area', 'App\\Api\\V1\\Controllers\\AreaController@index');
+            $api->get('/area/{id}', 'App\\Api\\V1\\Controllers\\AreaController@show');
+            $api->post('/area', 'App\\Api\\V1\\Controllers\\AreaController@store');
+            $api->put('/area', 'App\\Api\\V1\\Controllers\\AreaController@update');
+            $api->delete('/area/{id}', 'App\\Api\\V1\\Controllers\\AreaController@delete');
+
+            $api->get('/city', 'App\\Api\\V1\\Controllers\\CityController@index');
+            $api->get('/city/{id}', 'App\\Api\\V1\\Controllers\\CityController@show');
+            $api->post('/city', 'App\\Api\\V1\\Controllers\\CityController@store');
+            $api->put('/city', 'App\\Api\\V1\\Controllers\\CityController@update');
+            $api->delete('/city/{id}', 'App\\Api\\V1\\Controllers\\CityController@delete');
+
+            $api->get('/cluster', 'App\\Api\\V1\\Controllers\\ClusterController@index');
+            $api->get('/cluster/{id}', 'App\\Api\\V1\\Controllers\\ClusterController@show');
+            $api->post('/cluster', 'App\\Api\\V1\\Controllers\\ClusterController@store');
+            $api->put('/cluster', 'App\\Api\\V1\\Controllers\\ClusterController@update');
+            $api->delete('/cluster/{id}', 'App\\Api\\V1\\Controllers\\ClusterController@delete');
+
+
+        });
+
+      
 
         $api->group(['prefix' => 'site'], function (Router $api) {
             $api->get('/', 'App\\Api\\V1\\Controllers\\SiteController@index');

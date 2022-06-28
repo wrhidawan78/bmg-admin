@@ -46,9 +46,9 @@ class ReimburstExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         if($emp_id > 0){
             $sql .= " AND e.id = $emp_id";
         }
-        if($status > 0 || $status != ''){
-            $sql .= " AND r.status IN ($status)";
-        }
+
+        $sql .= " AND r.status IN ('$status')";
+        
 
         $exec_sql = DB::select(DB::raw($sql));
         foreach ($exec_sql as $data) {

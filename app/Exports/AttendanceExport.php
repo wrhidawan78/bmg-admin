@@ -32,7 +32,7 @@ class AttendanceExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 LEFT OUTER JOIN users u ON (a.user_id = u.id)
                 LEFT OUTER JOIN employment e ON (u.employe_id = e.id)
                 LEFT OUTER JOIN master_site ms ON (a.site_id = ms.id)
-                WHERE a.id != -1 AND DATE(a.check_in) BETWEEN '$from' AND '$to' AND e.id = 3";
+                WHERE a.id != -1 AND DATE(a.check_in) BETWEEN '$from' AND '$to'";
 
         if($emp_id > 0){
             $sql .= " AND e.id = $emp_id";

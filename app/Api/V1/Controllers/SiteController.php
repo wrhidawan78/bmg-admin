@@ -97,127 +97,95 @@ class SiteController extends Controller
     public static function create(Request $request)
     {
         SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), "SiteController", $request->all());
-        $save_photos = $request->file('photo');
-        if ($save_photos) {
-            $file_name = rand(1, 999999999);
-            $destination = public_path("/storage/sites/images");
-            $save_photos->move($destination, $file_name . ".jpg");
-
-            DB::beginTransaction();
-            try {
-                if ($this->role_id  == 1 || $this->role_id  == 2) {
-                    DB::table('master_site')
-                        ->insert(array(
-                            'site_id' => $request->site_id,
-                            'name' => $request->name,
-                            'lat' => $request->latitude,
-                            'long' => $request->longitude,
-                            'address' => $request->address,
-                            'pic' => $request->pic,
-                            'status' => 1,
-                            'image_attachment' => $file_name,
-                            'created_at' => Carbon::now(),
-                            'created_by' => $this->user_id
-                        ));
-
-                    $employe_id = explode(',', $request->employe_id);
-
-                    $latest_id = QuerySite::get_latest_added_site();
-                    foreach ($employe_id as $data) {
-                        DB::table('site_employees')
-                            ->insert(array(
-                                'site_id' => $latest_id,
-                                'employe_id' => $data,
-                                'status' => 1,
-                                'created_at' => Carbon::now()
-                            ));
-                    }
-                } else if (($this->role_id  == 3)) {
-                    DB::table('master_site')
-                        ->insert(array(
-                            'site_id' => $request->site_id,
-                            'name' => $request->name,
-                            'lat' => $request->latitude,
-                            'long' => $request->longitude,
-                            'address' => $request->address,
-                            'pic' => $request->pic,
-                            'status' => 1,
-                            'image_attachment' => $file_name,
-                            'created_at' => Carbon::now(),
-                            'created_by' => $this->user_id
-                        ));
-
-                    $latest_id = QuerySite::get_latest_added_site();
-
-                    DB::table('site_employees')
-                        ->insert(array(
-                            'site_id' => $latest_id,
-                            'employe_id' => $this->user_id,
-                            'status' => 1,
-                            'created_at' => Carbon::now()
-                        ));
-                }
-
-                // Commit Transaction
-                DB::commit();
-
-
-                return response()->json([
-                    'success' => true
-                ], 200);
-            } catch (Exception $e) {
-                // Rollback Transaction
-                DB::rollback();
-            }
-        }
-    }
-
-    public static function edit(Request $request)
-    {
-
-        SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), "SiteController", $request->all());
-        $save_photos = $request->file('photo');
-        if ($save_photos) {
-            $file_name = rand(1, 999999999);
-            $destination = public_path("/storage/sites/images");
-            $save_photos->move($destination, $file_name . ".jpg");
-
-            try {
-
-                DB::table('master_site')->where('id', $request->id)
-                    ->update(array(
+        DB::beginTransaction();
+        try {
+            if ($this->role_id  == 1 || $this->role_id  == 2) {
+                DB::table('master_site')
+                    ->insert(array(
                         'site_id' => $request->site_id,
                         'name' => $request->name,
                         'lat' => $request->latitude,
                         'long' => $request->longitude,
                         'address' => $request->address,
-                        'status' => $request->status,
-                        'image_attachment' => $file_name,
+                        'pic' => $request->pic,
+                        'status' => 1,
                         'created_at' => Carbon::now(),
                         'created_by' => $this->user_id
                     ));
-                // Commit Transaction
-                DB::commit();
-                // $employe_id = explode(',', $request->employee_id);
 
-                // $latest_id = QuerySite::get_latest_added_site();
-                // foreach ($employe_id as $data) {
-                //     DB::table('site_employees')
-                //         ->update(array(
-                //             'site_id' => $latest_id,
-                //             'employe_id' => $data,
-                //             'status' => 1,
-                //             'created_at' => Carbon::now()
-                //         ));
-                // }
+                $employe_id = explode(',', $request->employe_id);
 
-                return response()->json([
-                    'success' => true
-                ], 200);
-            } catch (Exception $e) {
-                // Rollback Transaction
-                DB::rollback();
+                $latest_id = QuerySite::get_latest_added_site();
+                foreach ($employe_id as $data) {
+                    DB::table('site_employees')
+                        ->insert(array(
+                            'site_id' => $latest_id,
+                            'employe_id' => $data,
+                            'status' => 1,
+                            'created_at' => Carbon::now()
+                        ));
+                }
+            } else if (($this->role_id  == 3)) {
+                DB::table('master_site')
+                    ->insert(array(
+                        'site_id' => $request->site_id,
+                        'name' => $request->name,
+                        'lat' => $request->latitude,
+                        'long' => $request->longitude,
+                        'address' => $request->address,
+                        'pic' => $request->pic,
+                        'status' => 1,
+                        'created_at' => Carbon::now(),
+                        'created_by' => $this->user_id
+                    ));
+
+                $latest_id = QuerySite::get_latest_added_site();
+
+                DB::table('site_employees')
+                    ->insert(array(
+                        'site_id' => $latest_id,
+                        'employe_id' => $this->user_id,
+                        'status' => 1,
+                        'created_at' => Carbon::now()
+                    ));
             }
+
+            // Commit Transaction
+            DB::commit();
+
+            return response()->json([
+                'success' => true
+            ], 200);
+        } catch (Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+        }
+       
+    }
+
+    public static function edit(Request $request)
+    {
+       // SiteHelper::createLogs($request->ip(), $request->method(), $request->url(), "SiteController", $request->all());
+        try {
+
+            DB::table('master_site')->where('id', $request->id)
+                ->update(array(
+                    'site_id' => $request->site_id,
+                    'name' => $request->name,
+                    'lat' => $request->latitude,
+                    'long' => $request->longitude,
+                    'address' => $request->address,
+                    'status' => $request->status,
+                    'created_at' => Carbon::now(),
+                    'created_by' => $this->user_id
+                ));
+            DB::commit();
+            return response()->json([
+                'success' => true
+            ], 200);
+        } catch (Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
         }
     }
 

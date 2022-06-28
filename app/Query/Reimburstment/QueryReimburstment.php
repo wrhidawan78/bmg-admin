@@ -41,8 +41,8 @@ class QueryReimburstment
                 FROM reimburstment r
                 LEFT JOIN users creator ON (r.submited_by = creator.id)
                 LEFT JOIN users approver ON (r.approved_by = approver.id)
-                LEFT OUTER JOIN employment e ON (creator.employe_id = e.id)
-                LEFT OUTER JOIN employment empapprover ON (approver.employe_id = empapprover.id)
+                LEFT OUTER JOIN employment e ON (creator.employe_id = e.refference_no)
+                LEFT OUTER JOIN employment empapprover ON (approver.employe_id = empapprover.refference_no)
                 WHERE r.id != - 1 AND r.reimburstment_date BETWEEN '$from' AND '$to'";
 
         if ($mobile > 0) {

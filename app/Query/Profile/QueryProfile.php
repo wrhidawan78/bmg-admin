@@ -7,40 +7,43 @@ use Illuminate\Support\Facades\DB;
 
 class QueryProfile
 {
-    public static function index($user_id, $name)
+    public static function index($user_id, $name, $customer)
     {
         $sql = "SELECT u.id,
-                    u.email,
-                    e.name AS emp_name,
-                    e.birthday_date AS emp_birth_date,
-                    e.division_id,
-                    d.name AS division_name,
-                    e.mobile_phone,
-                    e.religion,
-                    CASE
-                    WHEN e.gender = 1 THEN 'MALE' ELSE 'Female'
-                    END AS gender,
-                    CASE
-                    WHEN e.status = 1 THEN 'Active' ELSE 'Non Active'
-                    END AS status,
-                    e.address,
-                    e.join_date,
-                    e.resign_date,
-                    e.supervisor_id,
-                    supervisor.name AS supervisor,
-                    u.role_id,
-                    r.name AS role_name
-            FROM users u
-            JOIN employment e ON (u.employe_id = e.id)
-            LEFT OUTER JOIN division d ON (e.division_id = d.id)
-            LEFT JOIN employment AS supervisor ON (e.supervisor_id = supervisor.id)
-            LEFT JOIN role r ON (u.role_id = r.id)";
+                u.email,
+                ud.name AS emp_name,
+                '' as emp_birth_date,
+                e.division_id,
+                d.name as division_name,
+                ud.phone_number as mobile_phone,
+                '' as religion,
+                ud.gender as gender,
+                CASE
+                WHEN u.is_active = 1 THEN 'Active' ELSE 'Non Active'
+                END AS status,
+                '' as address,
+                '' as join_date,
+                '' as resign_date,
+                ''as supervisor_id,
+                '' as supervisor,
+                u.role_id,
+                r.name as role_name
+                from users u
+                join user_detail ud on (u.id = ud.user_id)
+                JOIN employment e ON (u.employe_id = e.id)
+                LEFT OUTER JOIN division d ON (e.division_id = d.id)
+                LEFT JOIN role r ON (u.role_id = r.id)
+                WHERE u.is_active = 1";
 
         if ($user_id > 0) {
-            $sql .= "  WHERE u.id = $user_id";
+            $sql .= " AND u.id = $user_id";
         }
         if ($name != '') {
             $sql .= " AND u.email LIKE '%$name%'";
+        }
+
+        if ($customer != ''){
+            $sql .= " AND ud.project_customer LIKE '%$customer%'";
         }
         return $sql;
     }
@@ -49,7 +52,7 @@ class QueryProfile
         $sql = "SELECT * FROM role";
 
         if ($role_id > 0) {
-            $sql .= " WHERE id = $role_id";
+            $sql .= " AND id = $role_id";
         }
         return $sql;
     }

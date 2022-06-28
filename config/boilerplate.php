@@ -13,6 +13,18 @@ return [
         'validation_rules' => [
             'email' => 'required|email',
             'password',
+            'name',
+            'gender',
+            'employe_id',
+            'employe_ktp',
+            'picture_ktp',
+            'phone_number',
+            'project_customer',
+            'position',
+            'region',
+            'area',
+            'cluster',
+            'sertificate',
             'uniq_id'
         ]
     ],

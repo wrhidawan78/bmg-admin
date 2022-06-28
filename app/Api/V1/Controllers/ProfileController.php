@@ -49,8 +49,14 @@ class ProfileController extends Controller
             $name = $request->name;
         }
 
+        if (empty($request->customer)) {
+            $customer = '';
+        } else {
+            $customer = $request->customer;
+        }
+
         $response = [];
-        $sql = QueryProfile::index(0, $name);
+        $sql = QueryProfile::index(0, $name, $customer);
 
         $exec_sql = SiteHelper::exec_query($sql);
         foreach ($exec_sql as $data) {
@@ -89,7 +95,13 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $response = [];
-        $sql = QueryProfile::index($this->user_id, '');
+
+        if (empty($request->customer)) {
+            $customer = '';
+        } else {
+            $customer = $request->customer;
+        }
+        $sql = QueryProfile::index($this->user_id, '', $customer);
 
         $exec_sql = SiteHelper::exec_query($sql);
         foreach ($exec_sql as $data) {
@@ -291,7 +303,7 @@ class ProfileController extends Controller
 
         $next_request = (empty($uniq_id->id) ? 0 : 1);
         $user = User::where('uniq_id', $request->uniq_id)->first();
-
+        
         if($next_request == 1){
             return response()->json([
                 'success' => true,
@@ -303,8 +315,69 @@ class ProfileController extends Controller
                 'data' => 'Uniq ID tidak ditemukan!'
             ], 402);
         }
-
-
        
+    }
+
+    public static function user_list(Request $request)
+    {
+        $user_id = $request->user_id;
+        $response = [];
+        $sql = "SELECT u.id, ud.name FROM users u LEFT OUTER JOIN user_detail ud ON (u.id = ud.user_id)";
+
+        if ($user_id != 0 || !empty($user_id)) {
+            $sql .= " AND u.id=$user_id";
+        }
+        $query = DB::select(DB::raw($sql));
+        foreach ($query as $data) {
+            $tmp = [];
+            $tmp['user_id'] = $data->id;
+            $tmp['name'] = $data->name;
+
+            array_push($response, $tmp);
+        }
+
+        return SiteHelper::convertJson($response);
+    }
+
+    public static function user_need_to_activated(Request $request){
+        $name = $request->name;
+        $response = [];
+        $sql = "SELECT u.id, ud.name, u.email, ud.employe_id FROM users u LEFT OUTER JOIN user_detail ud ON (u.id = ud.user_id) WHERE u.is_active = 0";
+
+        if ($name != '' || !empty($name)) {
+            $sql .= " AND ud.name LIKE '%$name%'";
+        }
+        $query = DB::select(DB::raw($sql));
+        foreach ($query as $data) {
+            $tmp = [];
+            $tmp['user_id'] = $data->id;
+            $tmp['name'] = $data->name;
+
+            array_push($response, $tmp);
+        }
+
+        return SiteHelper::convertJson($response);
+
+    }
+
+    public static function activated_user($user_id){
+        
+        DB::beginTransaction();
+        try {
+
+            DB::table('users')->where('id',$user_id)
+            ->update(array(
+                'is_active' => 1
+            ));
+
+            DB::commit();
+        } catch (Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+        }
+
+        return response()->json([
+            'success' => true
+        ], 200);
     }
 }

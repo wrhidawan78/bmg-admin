@@ -374,7 +374,7 @@ class ReimburstmentController extends Controller
         $from = (empty($request->from)) ? date("Y-$back_month-d") : $request->from;
         $to = (empty($request->to)) ? date('Y-m-d') : $request->to;
         $emp_id = (empty($request->emp_id)) ? 0 : $request->emp_id;
-        $status = (empty($request->status)) ? '1,2,3' : $request->status;
+        $status = (empty($request->status)) ? '0,1,2,3' : $request->status;
 
         return Excel::download(new ReimburstExport($from, $to, $emp_id,$status), "$filename.xlsx");
     }

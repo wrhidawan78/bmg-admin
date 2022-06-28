@@ -64,7 +64,7 @@ class LoginController extends Controller
                 throw new AccessDeniedHttpException();
             }
         } catch (JWTException $e) {
-            throw new HttpException(500);
+            throw new HttpException(500,"Internal server problem");
         }
 
         return response()

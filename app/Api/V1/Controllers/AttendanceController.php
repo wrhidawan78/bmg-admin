@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Query\Site\QuerySite;
 use JWTAuth;
 use Auth;
 use App\Query\Attendance\QueryAttendance;
@@ -46,14 +47,14 @@ class AttendanceController extends Controller
     }
     public function index(Request $request)
     {
-        if (empty($request->emp_id)) {
-            $emp_id = 0;
+        if (empty($request->user_id)) {
+            $user_id = 0;
         } else {
-            $emp_id = $request->emp_id;
+            $user_id = $request->user_id;
         }
 
         $response = [];
-        $sql = QueryAttendance::index($emp_id, $request->from, $request->to);
+        $sql = QueryAttendance::index($user_id, $request->from, $request->to);
 
         $exec_sql = SiteHelper::exec_query($sql);
         foreach ($exec_sql as $data) {
@@ -103,6 +104,8 @@ class AttendanceController extends Controller
                         'user_id' => $this->user_id,
                         'site_id' => $request->site_id,
                         'check_in' => Carbon::now(),
+                        'actvity_id' => $request->activity_id,
+                        'remark' => $request->remark,
                         'check_in_lat' => $request->latitude,
                         'check_in_long' => $request->longitude
                     ));
@@ -179,14 +182,30 @@ class AttendanceController extends Controller
         $emp_id = (empty($request->emp_id)) ? 0 : $request->emp_id;
         return Excel::download(new AttendanceExport($from, $to, $emp_id), "$filename.xlsx");
     }
+    public static function log_attendance_site($lat, $long)
+    {
+        $get_max_distance = DB::table('config')
+            ->where('param_code', 'max_radius_m')->where('type', 1)
+            ->first();
+        $max_distance = $get_max_distance->param_value / 1000;
+        $sql = "SELECT id, name, `long`, `lat`, address, (6371*acos(cos(radians('$lat'))*cos(radians(`lat`)) 
+                        *cos(radians(`long`) - radians('$long'))+sin(radians('$lat'))*sin(radians(`lat`)))) AS distance 
+                    FROM master_site
+                    WHERE status = 1
+                    HAVING distance < $max_distance
+                    ORDER BY distance LIMIT 1";
 
+        return $sql;
+    }
     public function create_logs(Request $request){
+        $sql = self::log_attendance_site($request->latitude, $request->longitude);
+        $exec_sql = SiteHelper::exec_query($sql);
         try {
 
             DB::table('attendance_logs')
                 ->insert(array(
                     'user_id' => $this->user_id,
-                    'site_no' => $request->site_id,
+                    'site_no' => $exec_sql[0]->id,
                     'lat' => $request->latitude,
                     'long' => $request->longitude,
                     'address' => $request->address,
@@ -242,6 +261,44 @@ class AttendanceController extends Controller
             $this->myUrl,
             $this->query
         );
+    }
+
+    public static function activity_list(Request $request)
+    {
+        $activity_id = $request->activity_id;
+        $response = [];
+        $sql = "SELECT id, name FROM activity";
+
+        if ($activity_id != 0 || !empty($activity_id)) {
+            $sql .= " AND id=$activity_id";
+        }
+        $query = DB::select(DB::raw($sql));
+        foreach ($query as $data) {
+            $tmp = [];
+            $tmp['activity_id'] = $data->id;
+            $tmp['name'] = $data->name;
+
+            array_push($response, $tmp);
+        }
+
+        return SiteHelper::convertJson($response);
+    }
+
+
+    public static function total_now(Request $request)
+    {
+        $now = date('Y-m-d');
+        $response = [];
+        $sql = "SELECT COUNT(id) AS total FROM attendance WHERE DATE(check_in) = '$now'";
+
+        $query = DB::select(DB::raw($sql));
+        foreach ($query as $data) {
+            $tmp = [];
+            $tmp['total'] = $data->total;
+            array_push($response, $tmp);
+        }
+
+        return SiteHelper::convertJson($response);
     }
 
 
